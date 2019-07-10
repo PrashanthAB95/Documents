@@ -1,0 +1,63 @@
+Postgres Backup and Restore Commands:
+kubectl --namespace sandbox-cccseu exec -t \
+	$(kubectl -n sandbox-cccseu get pod -oname | \
+		sed -n /\\/platform-postgres-7969449f87-vmtrj/s.pods\\?/..p) \
+	-- pg_dumpall -c -U postgres > platformpostgresql-backup.sql
+
+cat keycloakpostgresql-backup.sql | kubectl --namespace sandboxes-cccseu exec -i \
+	$(kubectl -n sandboxes-cccseu get pod -oname | \
+		sed -n /\\/keycloak-postgres-5888b68c65-4t9gf/s.pods\\?/..p) \
+	-- psql -U keycloak
+Link: https://github.com/GoogleCloudPlatform/click-to-deploy/blob/master/k8s/postgresql/README.md
+
+=======================================================================
+
+Delete the table and Create the table:
+psql -U postgres
+\list
+\c CCSONBOARD
+select * from ccs.subdomains;
+DROP TABLE ccs.subdomains;
+CREATE TABLE ccs.subdomains;
+
+Delete the DB and Create DB:
+DROP DATABASE "CCSONBOARD";
+CREATE DATABASE "CCSONBOARD";
+CREATE SCHEMA ccs
+
+========================================================================
+
+While dropping the DB shows error means:
+REVOKE CONNECT ON DATABASE "CCSONBOARD" FROM public;
+
+SELECT pid, pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = current_database() AND pid <> pg_backend_pid();
+
+GRANT CONNECT ON DATABASE "CCSPLATFORM" TO public;
+
+========================================================================
+
+select * from ccs.billings;
+
+DELETE FROM ccs.billings
+WHERE "billingID"=1;
+
+DELETE FROM ccs.subdomains
+WHERE "subdomainID"=9;
+
+UPDATE ccs."siteVersions"
+SET "versionName" = 'v 5.1'
+WHERE "id"=2;
+
+========================================================================
+
+ALTER TABLE ccs.users 
+ADD COLUMN status  VARCHAR DEFAULT '0',
+ADD COLUMN "verificationStatus"  VARCHAR DEFAULT '0',
+ADD COLUMN "activationStatus"  VARCHAR DEFAULT '0';
+
+
+UPDATE ccs.users
+SET "activationStatus" = '1'
+WHERE "id"=5;
