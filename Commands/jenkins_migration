@@ -1,0 +1,5 @@
+To migrate the whole Jenkins from one server to another server:
+
+http://chawarong.github.io/archives/2013-10-28-how-to-migrate-jenkins-to-a-new-server.html
+
+tar cvzf jenkins-`date +"%Y%m%d%H%M%S"`.tgz ./jenkins

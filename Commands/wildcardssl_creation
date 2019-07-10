@@ -1,0 +1,5 @@
+To create the wildcard SSL for the Domain:
+
+URL: https://medium.com/@saurabh6790/generate-wildcard-ssl-certificate-using-lets-encrypt-certbot-273e432794d7
+
+./certbot-auto certonly --manual --preferred-challenges=dns-01 --email=vignesh.k@akonisoftwareservices.com --server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d *.cccseu.com -d cccseu.com

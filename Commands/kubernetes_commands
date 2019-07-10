@@ -1,0 +1,72 @@
+To Restart the Containers in the Kubernetes:
+
+Frontend:
+kubectl scale deployment frontend --replicas=0 --namespace=
+kubectl scale deployment frontend --replicas=1 --namespace=
+
+Backend:
+kubectl scale deployment backend --replicas=0 --namespace=
+kubectl scale deployment backend --replicas=1 --namespace=
+
+Billing:
+kubectl scale deployment billing --replicas=0 --namespace=
+kubectl scale deployment billing --replicas=1 --namespace=
+
+Keycloak:
+kubectl scale deployment keycloak --replicas=0 --namespace=
+kubectl scale deployment keycloak --replicas=1 --namespace=
+
+Elasticsearch:(Frontend)
+kubectl scale deployment elasticsearch --replicas=0 --namespace=
+kubectl scale deployment elasticsearch --replicas=1 --namespace=
+
+Elasticsearch:(Backend)
+kubectl scale deployment elasticbackend --replicas=0 --namespace=
+kubectl scale deployment elasticbackend --replicas=1 --namespace=
+
+Image:(Object Storage)
+kubectl scale deployment image --replicas=0 --namespace=
+kubectl scale deployment image --replicas=1 --namespace=
+
+===============================================================================================
+
+To Updated the latest build in the server:
+
+Onboarding:
+kubectl set image deployment/frontend frontend=178.62.64.11:8086/onboard_frontend:1.2.56 --namespace=
+kubectl set image deployment/backend backend=178.62.64.11:8086/onboard_backend:1.2.45 --namespace=
+kubectl set image deployment/billing billing=178.62.64.11:8086/onboard_billing:1.2.36 --namespace=
+kubectl set image deployment/keycloak keycloak=178.62.64.11:8086/onboard_keycloak:1.2.7 --namespace=
+
+Platform:
+kubectl set image deployment/frontend frontend=178.62.64.11:8086/platform_frontend:1.2.302 --namespace=
+kubectl set image deployment/backend backend=178.62.64.11:8086/platform_backend:1.2.169 --namespace=
+kubectl set image deployment/imagebackend image=178.62.64.11:8086/platform_image:1.2.18 --namespace=
+kubectl set image deployment/elasticsearchbackend elasticsearchbackend=178.62.64.11:8086/platform_elasticsearch:1.2.32 --namespace=
+kubectl set image deployment/keycloak keycloak=178.62.64.11:8086/platform_keycloak:1.2.3 --namespace=
+kubectl set image deployment/wordpress webackend=178.62.64.11:8086/wordpress_backend:1.2.19 --namespace=
+kubectl set image deployment/permissionbackend permissionbackend=178.62.64.11:8086/platform_permission:1.2.2 --namespace=
+
+===============================================================================================
+
+To create the Configmaps:
+
+kubectl create configmap frontend-config --from-literal REACT_APP_BILLING_BACKEND_URI=https://onboarding-billing.cccseu.com/ --namespace=
+
+To Start the Kubernetes Dashboard:
+
+kubectl proxy --address 0.0.0.0 --accept-hosts '.*' &
+
+To create the tunnel for the server:
+
+ssh -L 8001:localhost:8001 root@104.248.166.239 | r9swe?o++lk04I3a6evo
+
+To Print the token:
+
+kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+
+Kubernetes UI:
+
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+
+
